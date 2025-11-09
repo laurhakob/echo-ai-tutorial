@@ -1,24 +1,66 @@
+// "use client";
+
+// import { WidgetAuthScreen } from "../screens/widget-auth-screen";
+
+// interface Props {
+//   organizationId: string;
+// }
+
+// export const WidgetView = ({ organizationId }: Props) => {
+//   return (
+//     <main className="min-h-screen min-w-screen flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
+//       <WidgetAuthScreen />
+//     </main>
+//   );
+// }; 
+
+
+
+
 "use client";
 
-import { WidgetFooter } from "../components/widget-footer";
-import { WidgetHeader } from "../components/widget-header";
+import { useAtomValue } from "jotai";
+import { WidgetAuthScreen } from "@/modules/widget/ui/screens/widget-auth-screen";
+import { screenAtom } from "@/modules/widget/atoms/widget-atoms";
+// import { WidgetErrorScreen } from "@/modules/widget/ui/screens/widget-error-screen";
+// import { WidgetLoadingScreen } from "@/modules/widget/ui/screens/widget-loading-screen";
+// import { WidgetSelectionScreen } from "@/modules/widget/ui/screens/widget-selection-screen";
+// import { WidgetChatScreen } from "@/modules/widget/ui/screens/widget-chat-screen";
+// import { WidgetInboxScreen } from "../screens/widget-inbox-screen";
+// import { WidgetVoiceScreen } from "../screens/widget-voice-screen";
+// import { WidgetContactScreen } from "../screens/widget-contact-screen";
 
 interface Props {
-  organizationId: string;
-}
+  organizationId: string | null;
+};
 
 export const WidgetView = ({ organizationId }: Props) => {
-  return (
-    <main className="min-h-screen min-w-screen flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
-      <WidgetHeader>
-        <div className="flex flex-col justify-between gap-y-2 px-2 py-6">
-          <p className="text-3xl">Hi there!👋</p>
-          <p className="text-lg">How can we help you today?</p>
-        </div>
-      </WidgetHeader>
+  const screen = useAtomValue(screenAtom);
 
-      <div className="flex flex-1">Widget View: {organizationId}</div>
-      <WidgetFooter />
+  const screenComponents = {
+    // loading: <WidgetLoadingScreen organizationId={organizationId} />,
+ loading: <p>Loading</p>,
+
+    // error: <WidgetErrorScreen />,
+     error: <p>Error</p>,
+
+    auth: <WidgetAuthScreen />,
+    // voice: <WidgetVoiceScreen />,
+    // inbox: <WidgetInboxScreen />,
+    // selection: <WidgetSelectionScreen />,
+    // chat: <WidgetChatScreen />,
+    // contact: <WidgetContactScreen />,
+
+    voice: <p>Voice</p>,
+    inbox: <p>inbox</p>,
+    selection: <p>Selection</p>,
+    chat: <p>chat</p>,
+    contact: <p>contact</p>,
+  }
+
+  return (
+    <main className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
+      {screenComponents[screen]}
     </main>
   );
 };
