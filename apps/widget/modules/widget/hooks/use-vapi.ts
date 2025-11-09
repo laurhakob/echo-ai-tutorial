@@ -84,86 +84,81 @@
 //   };
 // };
 
-
-
-
-import Vapi from '@vapi-ai/web'
-import { useEffect, useState } from 'react'
+import Vapi from "@vapi-ai/web";
+import { useEffect, useState } from "react";
 
 interface TranscriptMessage {
-  role: 'user' | 'assistant'
-  text: string
+  role: "user" | "assistant";
+  text: string;
 }
 
 export const useVapi = () => {
-  const [vapi, setVapi] = useState<Vapi | null>(null)
-  const [isConnected, setIsConnected] = useState(false)
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const [transcript, setTranscript] = useState<TranscriptMessage[]>([])
+  const [vapi, setVapi] = useState<Vapi | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [transcript, setTranscript] = useState<TranscriptMessage[]>([]);
 
   useEffect(() => {
     // Only for testing vapi api
-    // 87ad339e-9139-43f7-9878-38c7d8697447
-    const vapiInstance = new Vapi('')
-    setVapi(vapiInstance)
+    const vapiInstance = new Vapi("");
+    setVapi(vapiInstance);
 
-    vapiInstance.on('call-start', () => {
-      setIsConnecting(true)
-      setIsConnecting(false)
-      setTranscript([])
-    })
+    vapiInstance.on("call-start", () => {
+      setIsConnecting(true);
+      setIsConnecting(false);
+      setTranscript([]);
+    });
 
-    vapiInstance.on('call-end', () => {
-      setIsConnected(false)
-      setIsConnecting(false)
-      setIsSpeaking(false)
-    })
+    vapiInstance.on("call-end", () => {
+      setIsConnected(false);
+      setIsConnecting(false);
+      setIsSpeaking(false);
+    });
 
-    vapiInstance.on('speech-start', () => {
-      setIsSpeaking(true)
-    })
+    vapiInstance.on("speech-start", () => {
+      setIsSpeaking(true);
+    });
 
-    vapiInstance.on('speech-end', () => {
-      setIsSpeaking(false)
-    })
+    vapiInstance.on("speech-end", () => {
+      setIsSpeaking(false);
+    });
 
-    vapiInstance.on('error', (error) => {
-      console.log('VAPI_ERROR', error)
-      setIsConnected(false)
-    })
+    vapiInstance.on("error", (error) => {
+      console.log("VAPI_ERROR", error);
+      setIsConnected(false);
+    });
 
-    vapiInstance.on('message', (message) => {
-      if (message.type === 'transcript' && message.transcriptType === 'final') {
+    vapiInstance.on("message", (message) => {
+      if (message.type === "transcript" && message.transcriptType === "final") {
         setTranscript((prev) => [
           ...prev,
           {
-            role: message.role === 'user' ? 'user' : 'assistant',
+            role: message.role === "user" ? "user" : "assistant",
             text: message.transcript,
           },
-        ])
+        ]);
       }
-    })
+    });
 
     return () => {
-        vapiInstance?.stop()
-    }
-  }, [])
+      vapiInstance?.stop();
+    };
+  }, []);
 
   const startCall = () => {
-    setIsConnecting(true)
+    setIsConnecting(true);
 
-    // eef5a312-d70f-4ace-8706-81f5bbf794b4
-    if(vapi) {
-        vapi.start("")
+    if (vapi) {
+      vapi.start("");
     }
-  }
+  };
 
   const endCall = () => {
-    if(vapi) {
-        vapi.stop()
+    if (vapi) {
+      vapi.stop();
     }
-  }
+  };
 
   return {
     isConnected,
@@ -171,6 +166,6 @@ export const useVapi = () => {
     isSpeaking,
     transcript,
     startCall,
-    endCall
-  }
-}
+    endCall,
+  };
+};
