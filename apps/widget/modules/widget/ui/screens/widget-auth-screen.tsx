@@ -1,21 +1,25 @@
-  import { z } from "zod";
-  import { useForm } from "react-hook-form";
-  import { zodResolver } from "@hookform/resolvers/zod";
-  import {
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from "@workspace/ui/components/form";
-  import { Button } from "@workspace/ui/components/button";
-  import { Input } from "@workspace/ui/components/input";
-  import { WidgetHeader } from "@/modules/widget/ui/components/widget-header";
-  import { useMutation } from "convex/react";
-  import { api } from "@workspace/backend/_generated/api";
-  import { Doc } from "@workspace/backend/_generated/dataModel";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+import { WidgetHeader } from "@/modules/widget/ui/components/widget-header";
+import { useMutation } from "convex/react";
+import { api } from "@workspace/backend/_generated/api";
+import { Doc } from "@workspace/backend/_generated/dataModel";
 import { useAtomValue, useSetAtom } from "jotai";
-import { contactSessionIdAtomFamily, organizationIdAtom, screenAtom } from "../../atoms/widget-atoms";
+import {
+  contactSessionIdAtomFamily,
+  organizationIdAtom,
+  screenAtom,
+} from "../../atoms/widget-atoms";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -24,7 +28,6 @@ const formSchema = z.object({
 
 export const WidgetAuthScreen = () => {
   const setScreen = useSetAtom(screenAtom);
-
 
   const organizationId = useAtomValue(organizationIdAtom);
   const setContactSessionId = useSetAtom(
@@ -75,12 +78,8 @@ export const WidgetAuthScreen = () => {
     <>
       <WidgetHeader>
         <div className="flex flex-col justify-between gap-y-2 px-2 py-6 font-semibold">
-          <p className="text-3xl">
-            Hi there! 👋
-          </p>
-          <p className="text-lg">
-            Let&apos;s get you started
-          </p>
+          <p className="text-3xl">Hi there! 👋</p>
+          <p className="text-lg">Let&apos;s get you started</p>
         </div>
       </WidgetHeader>
       <Form {...form}>
@@ -132,5 +131,5 @@ export const WidgetAuthScreen = () => {
         </form>
       </Form>
     </>
-  )
-}
+  );
+};
