@@ -1,67 +1,47 @@
-// import { ConvexError, v } from "convex/values";
-// import { internalMutation, internalQuery } from "../_generated/server";
+import { ConvexError, v } from "convex/values";
+import { internalMutation, internalQuery } from "../_generated/server";
 
-// export const escalate = internalMutation({
-//   args: {
-//     threadId: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const conversation = await ctx.db
-//       .query("conversations")
-//       .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
-//       .unique();
+export const escalate = internalMutation({
+  args: {
+    threadId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
+      .unique();
 
-//     if (!conversation) {
-//       throw new ConvexError({
-//         code: "NOT_FOUND",
-//         message: "Conversation not found",
-//       });
-//     }
+    if (!conversation) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Conversation not found",
+      });
+    }
 
-//     await ctx.db.patch(conversation._id, { status: "escalated" });
-//   },
-// });
+    await ctx.db.patch(conversation._id, { status: "escalated" });
+  },
+});
 
-// export const resolve = internalMutation({
-//   args: {
-//     threadId: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const conversation = await ctx.db
-//       .query("conversations")
-//       .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
-//       .unique();
+export const resolve = internalMutation({
+  args: {
+    threadId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
+      .unique();
 
-//     if (!conversation) {
-//       throw new ConvexError({
-//         code: "NOT_FOUND",
-//         message: "Conversation not found",
-//       });
-//     }
+    if (!conversation) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Conversation not found",
+      });
+    }
 
-//     await ctx.db.patch(conversation._id, { status: "resolved" });
-//   },
-// });
-
-// export const getByThreadId = internalQuery({
-//   args: {
-//     threadId: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const conversation = await ctx.db
-//       .query("conversations")
-//       .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
-//       .unique();
-
-//     return conversation;
-//   },
-// });
-
-
-
-
-import { v } from "convex/values";
-import { internalQuery } from "../_generated/server";
+    await ctx.db.patch(conversation._id, { status: "resolved" });
+  },
+});
 
 export const getByThreadId = internalQuery({
   args: {
@@ -76,3 +56,23 @@ export const getByThreadId = internalQuery({
     return conversation;
   },
 });
+
+
+
+
+// import { v } from "convex/values";
+// import { internalQuery } from "../_generated/server";
+
+// export const getByThreadId = internalQuery({
+//   args: {
+//     threadId: v.string(),
+//   },
+//   handler: async (ctx, args) => {
+//     const conversation = await ctx.db
+//       .query("conversations")
+//       .withIndex("by_thread_id", (q) => q.eq("threadId", args.threadId))
+//       .unique();
+
+//     return conversation;
+//   },
+// });
