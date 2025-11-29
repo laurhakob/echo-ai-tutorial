@@ -47,7 +47,7 @@ export const useVapiAssistants = (): {
     return () => {
       cancelled = true;
     };
-  }, [getAssistants]);
+  }, []);
 
   return { data, isLoading, error };
 };
@@ -93,7 +93,7 @@ export const useVapiPhoneNumbers = (): {
     return () => {
       cancelled = true;
     };
-  }, [getPhoneNumbers]);
+  }, []);
 
   return { data, isLoading, error };
 };
