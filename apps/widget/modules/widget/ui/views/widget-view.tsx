@@ -1,19 +1,3 @@
-// "use client";
-
-// import { WidgetAuthScreen } from "../screens/widget-auth-screen";
-
-// interface Props {
-//   organizationId: string;
-// }
-
-// export const WidgetView = ({ organizationId }: Props) => {
-//   return (
-//     <main className="min-h-screen min-w-screen flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
-//       <WidgetAuthScreen />
-//     </main>
-//   );
-// };
-
 "use client";
 
 import { useAtomValue } from "jotai";
@@ -25,7 +9,7 @@ import { WidgetSelectionScreen } from "@/modules/widget/ui/screens/widget-select
 import { WidgetChatScreen } from "@/modules/widget/ui/screens/widget-chat-screen";
 import { WidgetInboxScreen } from "../screens/widget-inbox-screen";
 import { WidgetVoiceScreen } from "../screens/widget-voice-screen";
-// import { WidgetContactScreen } from "../screens/widget-contact-screen";
+import { WidgetContactScreen } from "../screens/widget-contact-screen";
 
 interface Props {
   organizationId: string | null;
@@ -44,9 +28,7 @@ export const WidgetView = ({ organizationId }: Props) => {
     inbox: <WidgetInboxScreen />,
     selection: <WidgetSelectionScreen />,
     chat: <WidgetChatScreen />,
-    // contact: <WidgetContactScreen />,
-
-    contact: <p>contact</p>,
+    contact: <WidgetContactScreen />,
   };
 
   return (
