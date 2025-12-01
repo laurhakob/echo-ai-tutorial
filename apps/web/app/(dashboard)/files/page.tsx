@@ -1,17 +1,6 @@
-// const Page = () => {
-//     return ( 
-//         <div>
-//             Files
-//         </div>
-//      );
-// }
- 
-// export default Page;
-
-
 import { Protect } from "@clerk/nextjs";
 
-// import { PremiumFeatureOverlay } from "@/modules/billing/ui/components/premium-feature-overlay";
+import { PremiumFeatureOverlay } from "@/modules/billing/ui/components/premium-feature-overlay";
 import { FilesView } from "@/modules/files/ui/views/files-view";
 
 const Page = () => {
@@ -19,14 +8,14 @@ const Page = () => {
     <Protect
       condition={(has) => has({ plan: "pro" })}
       fallback={
-        // <PremiumFeatureOverlay>
+        <PremiumFeatureOverlay>
           <FilesView />
-        // </PremiumFeatureOverlay>
+        </PremiumFeatureOverlay>
       }
     >
       <FilesView />
     </Protect>
   );
 };
- 
+
 export default Page;
