@@ -1,3 +1,5 @@
+// verjnakan
+
 import { ConvexError, v } from "convex/values";
 import { action, query } from "../_generated/server";
 import { components, internal } from "../_generated/api";
@@ -17,19 +19,23 @@ export const create = action({
   handler: async (ctx, args) => {
     const contactSession = await ctx.runQuery(
       internal.system.contactSessions.getOne,
-      { contactSessionId: args.contactSessionId }
+      {
+        contactSessionId: args.contactSessionId,
+      }
     );
 
     if (!contactSession || contactSession.expiresAt < Date.now()) {
       throw new ConvexError({
         code: "UNAUTHORIZED",
-        message: "Invalid Session",
+        message: "Invalid session",
       });
     }
 
     const conversation = await ctx.runQuery(
       internal.system.conversations.getByThreadId,
-      { threadId: args.threadId }
+      {
+        threadId: args.threadId,
+      },
     );
 
     if (!conversation) {
@@ -42,13 +48,24 @@ export const create = action({
     if (conversation.status === "resolved") {
       throw new ConvexError({
         code: "BAD_REQUEST",
-        message: "Conversation is resolved",
+        message: "Conversation resolved",
       });
     }
 
-    // TODO: implement subscription check
+    // This refreshes the user's session if they are within the threshold
+    await ctx.runMutation(internal.system.contactSessions.refresh, {
+      contactSessionId: args.contactSessionId,
+    });
 
-    const shouldTriggerAgent = conversation.status === "unresolved";
+    const subscription = await ctx.runQuery(
+      internal.system.subscriptions.getByOrganizationId,
+      {
+        organizationId: conversation.organizationId,
+      },
+    );
+
+    const shouldTriggerAgent =
+      conversation.status === "unresolved" && subscription?.status === "active"
 
     if (shouldTriggerAgent) {
       await supportAgent.generateText(
@@ -60,9 +77,9 @@ export const create = action({
             escalateConversationTool: escalateConversation,
             resolveConversationTool: resolveConversation,
             searchTool: search,
-          },
-        }
-      );
+          }
+        },
+      )
     } else {
       await saveMessage(ctx, components.agent, {
         threadId: args.threadId,
@@ -84,7 +101,7 @@ export const getMany = query({
     if (!contactSession || contactSession.expiresAt < Date.now()) {
       throw new ConvexError({
         code: "UNAUTHORIZED",
-        message: "Invalid Session",
+        message: "Invalid session",
       });
     }
 

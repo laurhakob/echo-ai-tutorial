@@ -1,3 +1,5 @@
+// verjnakan
+
 import { ConvexError, v } from "convex/values";
 import { generateText } from "ai";
 import { action, mutation, query } from "../_generated/server";
@@ -31,19 +33,19 @@ export const enhanceResponse = action({
       });
     }
 
-    // const subscription = await ctx.runQuery(
-    //   internal.system.subscriptions.getByOrganizationId,
-    //   {
-    //     organizationId: orgId,
-    //   },
-    // );
+    const subscription = await ctx.runQuery(
+      internal.system.subscriptions.getByOrganizationId,
+      {
+        organizationId: orgId,
+      }
+    );
 
-    // if (subscription?.status !== "active") {
-    //   throw new ConvexError({
-    //     code: "BAD_REQUEST",
-    //     message: "Missing subscription"
-    //   });
-    // }
+    if (subscription?.status !== "active") {
+      throw new ConvexError({
+        code: "BAD_REQUEST",
+        message: "Missing subscription",
+      });
+    }
 
     const response = await generateText({
       model: openai("gpt-4o-mini"),

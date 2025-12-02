@@ -1,3 +1,5 @@
+// verjnakan
+
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "../_generated/server";
 
@@ -10,11 +12,11 @@ export const upsert = internalMutation({
   handler: async (ctx, args) => {
     const existingPlugin = await ctx.db
       .query("plugins")
-      .withIndex("by_organization_id_and_service", (q) =>
-        q.eq("organizationId", args.organizationId).eq("service", args.service)
+      .withIndex("by_organization_id_and_service", (q) => 
+        q.eq("organizationId", args.organizationId).eq("service", args.service),
       )
       .unique();
-
+    
     if (existingPlugin) {
       await ctx.db.patch(existingPlugin._id, {
         service: args.service,
@@ -38,8 +40,8 @@ export const getByOrganizationIdAndService = internalQuery({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("plugins")
-      .withIndex("by_organization_id_and_service", (q) =>
-        q.eq("organizationId", args.organizationId).eq("service", args.service)
+      .withIndex("by_organization_id_and_service", (q) => 
+        q.eq("organizationId", args.organizationId).eq("service", args.service),
       )
       .unique();
   },

@@ -1,3 +1,5 @@
+// verjnakan
+
 "use client";
 
 import { useInfiniteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
@@ -44,7 +46,7 @@ const formSchema = z.object({
 export const ConversationIdView = ({
   conversationId,
 }: {
-  conversationId: Id<"conversations">;
+  conversationId: Id<"conversations">,
 }) => {
   const conversation = useQuery(api.private.conversations.getOne, {
     conversationId,
@@ -53,15 +55,19 @@ export const ConversationIdView = ({
   const messages = useThreadMessages(
     api.private.messages.getMany,
     conversation?.threadId ? { threadId: conversation.threadId } : "skip",
-    { initialNumItems: 10 }
+    { initialNumItems: 10, }
   );
 
-  const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
-    useInfiniteScroll({
-      status: messages.status,
-      loadMore: messages.loadMore,
-      loadSize: 10,
-    });
+  const {
+    topElementRef,
+    handleLoadMore,
+    canLoadMore,
+    isLoadingMore,
+  } = useInfiniteScroll({
+    status: messages.status,
+    loadMore: messages.loadMore,
+    loadSize: 10,
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -86,7 +92,7 @@ export const ConversationIdView = ({
     } finally {
       setIsEnhancing(false);
     }
-  };
+  }
 
   const createMessage = useMutation(api.private.messages.create);
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -103,9 +109,7 @@ export const ConversationIdView = ({
   };
 
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-  const updateConversationStatus = useMutation(
-    api.private.conversations.updateStatus
-  );
+  const updateConversationStatus = useMutation(api.private.conversations.updateStatus);
   const handleToggleStatus = async () => {
     if (!conversation) {
       return;
@@ -119,9 +123,9 @@ export const ConversationIdView = ({
     if (conversation.status === "unresolved") {
       newStatus = "escalated";
     } else if (conversation.status === "escalated") {
-      newStatus = "resolved";
+      newStatus = "resolved"
     } else {
-      newStatus = "unresolved";
+      newStatus = "unresolved"
     }
 
     try {
@@ -137,13 +141,16 @@ export const ConversationIdView = ({
   };
 
   if (conversation === undefined || messages.status === "LoadingFirstPage") {
-    return <ConversationIdViewLoading />;
+    return <ConversationIdViewLoading />
   }
 
   return (
     <div className="flex h-full flex-col bg-muted">
       <header className="flex items-center justify-between border-b bg-background p-2.5">
-        <Button size="sm" variant="ghost">
+        <Button
+          size="sm"
+          variant="ghost"
+        >
           <MoreHorizontalIcon />
         </Button>
         {!!conversation && (
@@ -164,12 +171,14 @@ export const ConversationIdView = ({
           />
           {toUIMessages(messages.results ?? [])?.map((message) => (
             <AIMessage
-              // In reverse, because we are watching from "assistant" prespective
+            // In reverse, because we are watching from "assistant" prespective
               from={message.role === "user" ? "assistant" : "user"}
               key={message.id}
             >
               <AIMessageContent>
-                <AIResponse>{message.content}</AIResponse>
+                <AIResponse>
+                  {message.content}
+                </AIResponse>
               </AIMessageContent>
               {message.role === "user" && (
                 <DicebearAvatar
@@ -182,7 +191,7 @@ export const ConversationIdView = ({
         </AIConversationContent>
         <AIConversationScrollButton />
       </AIConversation>
-
+      
       <div className="p-2">
         <Form {...form}>
           <AIInput onSubmit={form.handleSubmit(onSubmit)}>
@@ -218,8 +227,8 @@ export const ConversationIdView = ({
                 <AIInputButton
                   onClick={handleEnhanceResponse}
                   disabled={
-                    conversation?.status === "resolved" ||
-                    isEnhancing ||
+                    conversation?.status === "resolved" || 
+                    isEnhancing || 
                     !form.formState.isValid
                   }
                 >
@@ -268,9 +277,7 @@ export const ConversationIdViewLoading = () => {
                 )}
                 key={index}
               >
-                <Skeleton
-                  className={`h-9 ${width} rounded-lg bg-neutral-200`}
-                />
+                <Skeleton className={`h-9 ${width} rounded-lg bg-neutral-200`} />
                 <Skeleton className="size-8 rounded-full bg-neutral-200" />
               </div>
             );
@@ -293,116 +300,3 @@ export const ConversationIdViewLoading = () => {
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client";
-
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-
-// import { api } from "@workspace/backend/_generated/api";
-// import { Id } from "@workspace/backend/_generated/dataModel";
-// import { Button } from "@workspace/ui/components/button";
-// import { useMutation, useQuery } from "convex/react";
-// import { MoreHorizontalIcon } from "lucide-react";
-// import z from "zod";
-// import { Skeleton } from "@workspace/ui/components/skeleton";
-// import {
-//   AIConversation,
-//   AIConversationContent,
-//   AIConversationScrollButton,
-// } from "@workspace/ui/components/ai/conversation";
-// import { cn } from "@workspace/ui/lib/utils";
-//  import { toUIMessages, useThreadMessages } from "@convex-dev/agent/react";
-
-// const formSchema = z.object({
-//   message: z.string().min(1, "Message is required"),
-// });
-
-// export const ConversationIdView = ({
-//   conversationId,
-// }: {
-//   conversationId: Id<"conversations">;
-// }) => {
-//   const conversation = useQuery(api.private.conversations.getOne, {
-//     conversationId,
-//   });
-
-//     const messages = useThreadMessages(
-//     api.private.messages.getMany,
-//     conversation?.threadId ? { threadId: conversation.threadId } : "skip",
-//     { initialNumItems: 10, }
-//   );
-
-//   const form = useForm<z.infer<typeof formSchema>>({
-//     resolver: zodResolver(formSchema),
-//     defaultValues: {
-//       message: "",
-//     },
-//   });
-
-//   const createMessage = useMutation(api.private.messages.create);
-
-//     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-//     try {
-//       await createMessage({
-//         conversationId,
-//         prompt: values.message,
-//       });
-
-//       form.reset();
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <div className="flex h-full flex-col bg-muted">
-//       <header className="flex items-center justify-between border-b bg-background p-2.5">
-//         <Button size="sm" variant="ghost">
-//           <MoreHorizontalIcon />
-//         </Button>
-//       </header>
-//             <AIConversation className="max-h-[calc(100vh-180px)]">
-//          <AIConversationContent>
-//           {Array.from({ length: 8 }, (_, index) => {
-//             const isUser = index % 2 === 0;
-//             const widths = ["w-48", "w-60", "w-72"];
-//             const width = widths[index % widths.length];
-
-//             return (
-//               <div
-//                 className={cn(
-//                   "group flex w-full items-end justify-end gap-2 py-2 [&>div]:max-w-[80%]",
-//                   isUser ? "is-user" : "is-assistant flex-row-reverse"
-//                 )}
-//                 key={index}
-//               >
-//                 <Skeleton className={`h-9 ${width} rounded-lg bg-neutral-200`} />
-//                 <Skeleton className="size-8 rounded-full bg-neutral-200" />
-//               </div>
-//             );
-//           })}
-//         </AIConversationContent>
-//       </AIConversation>
-//     </div>
-//   );
-// };
